@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx", // For React 17 and later
+    "target": "ES6",    // Target a modern ECMAScript version
+    "module": "ESNext", // Use ESNext module resolution
+    "moduleResolution": "node",
+    "strict": true,     // Enable strict type-checking options
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src"],   // Adjust this to match your project structure
+  "exclude": ["node_modules"]
+}
