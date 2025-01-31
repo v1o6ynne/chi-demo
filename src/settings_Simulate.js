@@ -36,6 +36,36 @@ const Settings = ({
   paper,
   setPaper,
 }) => {
+  if (mode === 'paper') {
+    return (
+      <FormControl sx={{ m: 1, minWidth: 120, width: '90%', margin: '0 auto', marginBottom: 2 }} fullWidth size="small">
+        <InputLabel
+          sx={{
+            backgroundColor: 'white',
+          }}
+          id="paper-select-label"
+        >
+          Select from Pre-set
+        </InputLabel>
+        <Select
+          labelId="paper-select-label"
+          id="paper-select"
+          value={paper}
+          onChange={(e) => setPaper(e.target.value)}
+        >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          {PAPER_OPTIONS.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    );
+  }
+
   return (
     <FormGroup
       sx={{
@@ -47,183 +77,156 @@ const Settings = ({
         margin: '0 auto', // Center horizontally
       }}
     >
-      {mode === 'default' && (
-        <>
-          {/* Model Selection */}
-          <FormControl sx={{ m: 1, minWidth: 120 }} fullWidth size="small">
-            <InputLabel
-              sx={{
-                backgroundColor: 'white',
-              }}
-              id="model-select-label"
-            >
-              Select a Model
-            </InputLabel>
-            <Select
-              labelId="model-select-label"
-              id="model-select"
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
-              sx={{
-                backgroundColor: 'white',
-              }}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {MODEL_OPTIONS.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+      {/* Model Selection */}
+      <FormControl sx={{ m: 1, minWidth: 120 }} fullWidth size="small">
+        <InputLabel
+          sx={{
+            backgroundColor: 'white',
+          }}
+          id="model-select-label"
+        >
+          Select a Model
+        </InputLabel>
+        <Select
+          labelId="model-select-label"
+          id="model-select"
+          value={model}
+          onChange={(e) => setModel(e.target.value)}
+          sx={{
+            backgroundColor: 'white',
+          }}
+        >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          {MODEL_OPTIONS.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
-          {/* Dataset Selection */}
-          <FormControl sx={{ m: 1, minWidth: 120 }} fullWidth size="small">
-            <InputLabel
-              sx={{
-                backgroundColor: 'white',
-              }}
-              id="dataset-select-label"
-            >
-              Select a Dataset
-            </InputLabel>
-            <Select
-              labelId="dataset-select-label"
-              id="dataset-select"
-              value={dataset}
-              onChange={(e) => setDataset(e.target.value)}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {DATASET_OPTIONS.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+      {/* Dataset Selection */}
+      <FormControl sx={{ m: 1, minWidth: 120 }} fullWidth size="small">
+        <InputLabel
+          sx={{
+            backgroundColor: 'white',
+          }}
+          id="dataset-select-label"
+        >
+          Select a Dataset
+        </InputLabel>
+        <Select
+          labelId="dataset-select-label"
+          id="dataset-select"
+          value={dataset}
+          onChange={(e) => setDataset(e.target.value)}
+        >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          {DATASET_OPTIONS.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
-          {/* Region Selection */}
-          <FormControl sx={{ m: 1, minWidth: 120 }} fullWidth size="small">
-            <InputLabel
-              sx={{
-                backgroundColor: 'white',
-              }}
-              id="region-select-label"
-            >
-              Select a Region of Interest
-            </InputLabel>
-            <Select
-              labelId="region-select-label"
-              id="region-select"
-              value={region}
-              onChange={(e) => setRegion(e.target.value)}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {REGION_OPTIONS.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+      {/* Region Selection */}
+      <FormControl sx={{ m: 1, minWidth: 120 }} fullWidth size="small">
+        <InputLabel
+          sx={{
+            backgroundColor: 'white',
+          }}
+          id="region-select-label"
+        >
+          Select a Region of Interest
+        </InputLabel>
+        <Select
+          labelId="region-select-label"
+          id="region-select"
+          value={region}
+          onChange={(e) => setRegion(e.target.value)}
+        >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          {REGION_OPTIONS.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
-          {/* Voxel Selection */}
-          <FormControl sx={{ m: 1, minWidth: 120 }} fullWidth size="small">
-            <InputLabel
-              sx={{
-                backgroundColor: 'white',
-              }}
-              id="voxel-select-label"
-            >
-              Select Voxels
-            </InputLabel>
-            <Select
-              labelId="voxel-select-label"
-              id="voxel-select"
-              value={voxelOption}
-              onChange={(e) => setVoxelOption(e.target.value)}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {VOXEL_OPTIONS.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
+      {/* Voxel Selection */}
+      <FormControl sx={{ m: 1, minWidth: 120 }} fullWidth size="small">
+        <InputLabel
+          sx={{
+            backgroundColor: 'white',
+          }}
+          id="voxel-select-label"
+        >
+          Select Voxels
+        </InputLabel>
+        <Select
+          labelId="voxel-select-label"
+          id="voxel-select"
+          value={voxelOption}
+          onChange={(e) => setVoxelOption(e.target.value)}
+        >
+          <MenuItem value="">
+            <em>None</em>
+          </MenuItem>
+          {VOXEL_OPTIONS.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </Select>
 
-            {voxelOption === 'random-voxels' && (
-              <TextField
-                variant="outlined"
-                size="small"
-                placeholder="Enter number of voxels"
-                value={voxelNumber}
-                onChange={(e) => setVoxelNumber(e.target.value)}
-                sx={{
-                  marginTop: 2,
-                  backgroundColor: 'white',
-                  borderRadius: '4px',
-                }}
-              />
-            )}
+        {voxelOption === 'random-voxels' && (
+          <TextField
+            variant="outlined"
+            size="small"
+            placeholder="Enter number of voxels"
+            value={voxelNumber}
+            onChange={(e) => setVoxelNumber(e.target.value)}
+            sx={{
+              marginTop: 2,
+              backgroundColor: 'white',
+              borderRadius: '4px',
+            }}
+          />
+        )}
 
-            {voxelOption === 'specify-a-participant' && (
-              <TextField
-                variant="outlined"
-                size="small"
-                placeholder="Enter participant name (e.g., p1)"
-                value={participantName}
-                onChange={(e) => setParticipantName(e.target.value)}
-                sx={{
-                  marginTop: 2,
-                  backgroundColor: 'white',
-                  borderRadius: '4px',
-                }}
-              />
-            )}
-          </FormControl>
-        </>
-      )}
+        {voxelOption === 'specify-a-participant' && (
+          <TextField
+            variant="outlined"
+            size="small"
+            placeholder="Enter participant name (e.g., p1)"
+            value={participantName}
+            onChange={(e) => setParticipantName(e.target.value)}
+            sx={{
+              marginTop: 2,
+              backgroundColor: 'white',
+              borderRadius: '4px',
+            }}
+          />
+        )}
+      </FormControl>
 
-      {mode === 'paper' && (
-        <>
-          {/* Paper Option */}
-          <FormControl sx={{ m: 1, minWidth: 120 }} fullWidth size="small">
-            <InputLabel
-              sx={{
-                backgroundColor: 'white',
-              }}
-              id="paper-select-label"
-            >
-              Select a Paper Experiment
-            </InputLabel>
-            <Select
-              labelId="paper-select-label"
-              id="paper-select"
-              value={paper}
-              onChange={(e) => setPaper(e.target.value)}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              {PAPER_OPTIONS.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </>
-      )}
     </FormGroup>
+
   );
+
+
+
+
+
+
 };
 
 export default Settings;

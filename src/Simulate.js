@@ -85,7 +85,7 @@ const Simulate = () => {
   
 
   return (
-    <Layout title="Virtual Visual Cortex/Simulation">
+    <Layout title="🧠 Vision Lab">
       <Box
         sx={{
           width: '100vw',
@@ -126,21 +126,46 @@ const Simulate = () => {
               maxWidth: '500px',
             }}
           >
-            <InputFileUpload />
-
-            <Typography variant="body2" align="center" sx={{ color: 'white'}}>
-              or
+            
+            {/* Step Title */}
+            <Typography variant="body2" align="left" sx={{ color: 'white'}}>
+              Step 1: Define Stimuli
             </Typography>
+            
+            {/* First Block for Stimuli */}
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2,
+                padding: '10px',
+                border: 'none', // No border as per your request
+                borderRadius: '8px', // More consistent with second block
+                backgroundColor: 'white',
+                textAlign: 'center',
+                width: { xs: '90%', sm: '90%', md: '90%' }, // Match the second block
+                margin: '0 auto', // Center it
+                boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)', // Optional: Light shadow for better contrast
+              }}
+            >
+              {/* File Upload */}
+              <InputFileUpload />
 
-            <Box sx={{ marginBottom: '24px' }}>
-              <Settings
-                mode="paper"
-                paper={paper}
-                setPaper={setPaper}
-              />
+              <Typography variant="body2" align="center" sx={{ color: 'black' }}>
+                or
+              </Typography>
+              
+              {/* Pre-set */}
+              <Settings mode="paper" paper={paper} setPaper={setPaper} />
             </Box>
 
-            {/* Settings Component */}
+
+            {/* Second Block for Training Settings*/}
+
+            <Typography variant="body2" align="left" sx={{ color: 'white' }}>
+                Step 2: Define Mapping
+            </Typography>
+
             <Settings
               model={model}
               setModel={setModel}
@@ -155,8 +180,7 @@ const Simulate = () => {
               sx={{ marginTop: '24px' }}
             />
 
-
-            {/* Run Simulation Button */}
+            {/* Third Block for Simulation Button */}
             <Box sx={{ marginTop: 2, textAlign: 'center' }}>
               <Button
                 onClick={() => handleRunSimulation({
@@ -173,7 +197,7 @@ const Simulate = () => {
                   border: 'none',
                   borderRadius: '5px',
                   cursor: 'pointer',
-                  width: '60%',
+                  width: '90%',
                   '&:hover': {
                     backgroundColor: '#D5D5D5',
                     boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
@@ -303,7 +327,7 @@ const Simulate = () => {
             </Button>
 
             {/* Upload Button */}
-            <Button
+            {/* <Button
               variant="contained"
               color="secondary"
               sx={{
@@ -335,7 +359,7 @@ const Simulate = () => {
                 hidden
                 onChange={handleFileUpload}
               />
-            </Button>
+            </Button> */}
           </Box>
         </Container>
       </Box>

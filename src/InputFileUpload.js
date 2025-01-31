@@ -41,7 +41,7 @@ export default function InputFileUpload() {
         margin: '0 auto', // Center horizontally
       }}
     >
-      Upload Stimuli Files
+      Upload Images
       <VisuallyHiddenInput
         type="file"
         onChange={handleFileChange}

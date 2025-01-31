@@ -28,7 +28,7 @@ const Layout = ({ children, title }) => {
             zIndex: 1000,
           }}
         >
-          <Typography variant="h6" component="div" sx={{ color: 'white' }}>
+          <Typography variant="h5" component="div" sx={{ color: 'white' }}>
             {title}
           </Typography>
         </Box>
