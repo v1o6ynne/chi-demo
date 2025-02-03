@@ -30,6 +30,7 @@ const Simulate = () => {
   const [voxelOption, setVoxelOption] = useState('');
   const [voxelNumber, setVoxelNumber] = useState('');
   const [paper, setPaper] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
 
 
   // Load heatmap data from the local CSV file
@@ -60,28 +61,83 @@ const Simulate = () => {
     });
   }, []);
 
-  const handleStart = () => {
-    console.log('Simulation started');
-    console.log({ model, dataset, region, voxelOption, voxelNumber });
-  };
 
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const content = e.target.result;
-        console.log('Uploaded File Content:', content);
-        // Process the uploaded file content (e.g., update visualization data)
-      };
-      reader.readAsText(file);
+  useEffect(() => {
+    const fetchSelections = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/get-selections");
+        const data = await response.json();
+        if (data.model) setModel(data.model);
+        if (data.dataset) setDataset(data.dataset);
+        if (data.region) setRegion(data.region);
+        if (data.voxelOption) setVoxelOption(data.voxelOption);
+        if (data.voxelNumber) setVoxelNumber(data.voxelNumber);
+      } catch (error) {
+        console.error("Error fetching selections:", error);
+      }
+    };
+    fetchSelections();
+  }, []);
+
+  
+  const handleSaveSelections = async () => {
+    // Validation: Check required fields
+    if (!model || !dataset || !region || !voxelOption) {
+      alert("Error: Please fill in all required fields (Model, Dataset, Region, Voxel Option).");
+      return;
+    }
+  
+    // Validation: Check voxelNumber conditions
+    if (voxelOption === "random-voxels" && !voxelNumber) {
+      alert("Error: Voxel number is required when selecting 'Random Voxels'.");
+      return;
+    }
+    if ((voxelOption === "specify-a-participant") && !voxelNumber) {
+      alert("Error: Participant name is required when selecting 'Specify a Participant'.");
+      return;
+    }
+  
+    // Proceed with saving selections
+    const selections = {
+      model,
+      dataset,
+      region,
+      voxelOption,
+      voxelNumber: voxelNumber.toString(),
+    };
+  
+    try {
+      const response = await fetch("http://localhost:8000/save-selections", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(selections),
+      });
+  
+      const result = await response.json();
+      console.log("Saved Selections and Images:", result.saved_images);
+    } catch (error) {
+      console.error("Error saving selections:", error);
     }
   };
 
-  const handleRunSimulation = (settings) => {
-    console.log('Running simulation with settings:', settings);
-    // run simulation logic here
-  };
+
+  // const handleFileUpload = (event) => {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       const content = e.target.result;
+  //       console.log('Uploaded File Content:', content);
+  //       // Process the uploaded file content (e.g., update visualization data)
+  //     };
+  //     reader.readAsText(file);
+  //   }
+  // };
+
+  // const handleRunSimulation = (settings) => {
+  //   console.log('Running simulation with settings:', settings);
+  //   // run simulation logic here
+  // };
   
 
   return (
@@ -183,13 +239,7 @@ const Simulate = () => {
             {/* Third Block for Simulation Button */}
             <Box sx={{ marginTop: 2, textAlign: 'center' }}>
               <Button
-                onClick={() => handleRunSimulation({
-                  model,
-                  dataset,
-                  region,
-                  voxelOption,
-                  voxelNumber,
-                })}
+                onClick={handleSaveSelections}
                 sx={{
                   padding: '10px 20px',
                   backgroundColor: 'white',

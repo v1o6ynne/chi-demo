@@ -15,12 +15,33 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 export default function InputFileUpload() {
-  const handleFileChange = (event) => {
-    const files = event.target.files;
-    if (files) {
-      console.log('Selected files:', files); // Handle the uploaded files here
+
+  const handleFileChange = async (event) => {
+    const files = event.target.files;  // Get all selected files
+    if (!files.length) return;
+
+    const formData = new FormData();
+    
+    // Append all selected files to FormData
+    for (let file of files) {
+      formData.append("files", file);
+    }
+
+    try {
+      const response = await fetch("http://localhost:8000/upload-image", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+      console.log("Uploaded Images:", result.uploaded_images);
+      console.log("Rejected Images:", result.rejected_files);
+    } catch (error) {
+      console.error("Error uploading images:", error);
     }
   };
+  
+  
 
   return (
     <Button
@@ -45,6 +66,7 @@ export default function InputFileUpload() {
       <VisuallyHiddenInput
         type="file"
         onChange={handleFileChange}
+        accept="image/png, image/jpeg, image/jpg, image/heic"
         multiple // Allow multiple file selection
       />
     </Button>
