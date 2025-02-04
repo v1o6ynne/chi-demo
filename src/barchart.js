@@ -6,11 +6,12 @@ import { barchartStyles, createXScale, createYScale, styleTooltip } from './barc
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
 import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 
-const BarChart = ({ data, height }) => {
+const BarChart = ({ barChartData, height }) => {
   const svgRef = useRef();
   const containerRef = useRef();
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [containerWidth, setContainerWidth] = useState(0);
+  const [order, setOrder] = useState("filename"); 
 
   // Update container width dynamically
   useEffect(() => {
@@ -31,8 +32,29 @@ const BarChart = ({ data, height }) => {
     };
   }, []);
 
+
+  const getSortedData = () => {
+    if (!barChartData) return [];  // If no data, return an empty array.
+  
+    if (order === "filename") {
+      return barChartData; // Use original order, no sorting needed.
+    } else if (order === "ranking") {
+      return [...barChartData].sort((a, b) => b.mean - a.mean); // Sort by mean descending.
+    }
+  
+    return barChartData; // Default case: return as-is.
+  };
+  
+
   useEffect(() => {
-    if (!data || data.length === 0 || containerWidth === 0) return;
+
+    const barChartData = getSortedData();
+
+    if (!barChartData || barChartData.length === 0) {
+      console.warn(" No barchart data available, skipping rendering.");
+      return;
+    }
+    console.log("✅ Rendering Barchart with Data:", barChartData);
 
     // Clear existing content
     const svg = d3.select(svgRef.current);
@@ -43,11 +65,10 @@ const BarChart = ({ data, height }) => {
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
-    // Create scales
-    const xScale = createXScale(data.map((d) => d.filename), innerWidth);
+    const xScale = createXScale(barChartData.map((d) => d.filename), innerWidth);
 
-    const yMin = d3.min(data, (d) => d.mean);
-    const yMax = d3.max(data, (d) => d.mean);
+    const yMin = d3.min(barChartData, (d) => d.mean);
+    const yMax = d3.max(barChartData, (d) => d.mean);
     const yScale = d3.scaleLinear().domain([yMin, yMax]).range([innerHeight, 0]);
 
     const colorScale = d3.scaleSequential(interpolateRdBu)  // Or another scheme
@@ -69,7 +90,7 @@ const BarChart = ({ data, height }) => {
 
     // Draw bars
     g.selectAll(".bar")
-    .data(data)
+    .data(barChartData)
     .enter()
     .append("rect")
     .attr("class", "bar")
@@ -116,7 +137,24 @@ const BarChart = ({ data, height }) => {
     //   .attr("transform", "rotate(-90)")
 
     g.append("g").call(d3.axisLeft(yScale));
-  }, [data, containerWidth, height]);
+
+    g.append("text")
+      .attr("x", innerWidth / 2)
+      .attr("y", innerHeight + margin.bottom - 10)
+      .attr("text-anchor", "middle")
+      .style("font-size", "14px")
+      .text("Images");
+    
+    g.append("text")
+      .attr("x", -margin.left - 10 / 2)
+      .attr("y", -30)
+      .attr("text-anchor", "middle")
+      .attr("transform", "rotate(-90)")
+      .style("font-size", "14px")
+      .text("Mean Response");
+
+
+  }, [barChartData, containerWidth, height, order]);
 
   // Fullscreen toggle function
   const toggleFullscreen = () => {
@@ -136,29 +174,77 @@ const BarChart = ({ data, height }) => {
 
   return (
     <div
-      ref={containerRef}
+    ref={containerRef}
+    style={{
+      position: 'relative',
+      width: isFullscreen ? '100%' : 'auto',
+      height,
+      backgroundColor: isFullscreen ? 'white' : 'transparent',
+      display: 'flex',
+      flexDirection: 'column', // Stack dropdown above the chart
+      alignItems: 'center', // Center align content
+      paddingTop: '40px' // Add extra space for the dropdown
+    }}
+  >
+    {/* Order By Dropdown */}
+    <div
+      className="mode-bar"
       style={{
-        position: 'center',
-        width: isFullscreen ? '100%' : 'auto', // Adjust to full width in fullscreen mode
-        height,
-        backgroundColor: isFullscreen ? 'white' : 'transparent',
+        position: 'absolute',
+        top: 10,
+        left: 10,
+        backgroundColor: 'rgba(255, 255, 255, 0.8)', // Slight transparency for better visibility
+        padding: '5px 10px',
+        borderRadius: '5px',
       }}
     >
-      <div className="mode-bar" style={{ position: 'absolute', top: 5, right: 1 }}>
-        <button
-          onClick={toggleFullscreen}
-          style={{
-            border: 'none',
-            background: 'transparent',
-            cursor: 'pointer',
-            padding: 0,
-          }}
-        >
-          {isFullscreen ? <FullscreenExitIcon sx={{ color: 'grey' }} /> : <FullscreenIcon sx={{ color: 'grey' }} />}
-        </button>
-      </div>
-      <svg ref={svgRef}></svg>
+      <label style={{ marginRight: '5px', fontSize: '14px' }}>Order by:</label>
+      <select
+        value={order}
+        onChange={(e) => setOrder(e.target.value)}
+        style={{ fontSize: '14px', padding: '2px' }}
+      >
+        <option value="filename">Filename</option>
+        <option value="ranking">Ranking</option>
+      </select>
     </div>
+
+    {/* Fullscreen Button */}
+    <div
+      className="mode-bar"
+      style={{
+        position: 'absolute',
+        top: 5,
+        right: 10,
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        padding: '5px',
+        borderRadius: '5px',
+      }}
+    >
+      <button
+        onClick={toggleFullscreen}
+        style={{
+          border: 'none',
+          background: 'transparent',
+          cursor: 'pointer',
+          padding: 0,
+        }}
+      >
+        {isFullscreen ? (
+          <FullscreenExitIcon sx={{ color: 'grey' }} />
+        ) : (
+          <FullscreenIcon sx={{ color: 'grey' }} />
+        )}
+      </button>
+    </div>
+
+    {/* Bar Chart */}
+    <svg ref={svgRef} style={{ marginTop: '20px' }}></svg> {/* Added marginTop */}
+  </div>
+
+
+
+
   );
 };
 

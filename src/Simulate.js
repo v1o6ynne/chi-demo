@@ -20,9 +20,10 @@ import BarChart from './barchart';
 import PlayLessonIcon from '@mui/icons-material/PlayLesson';
 import * as d3 from 'd3';
 
+import useHeatmapData from './useHeatmapData';
+import useBarchartData from './useBarchartData';
+
 const Simulate = () => {
-  const [heatmapData, setHeatmapData] = useState([]);
-  const [barChartData, setBarChartData] = useState([]);
 
   const [model, setModel] = useState('');
   const [dataset, setDataset] = useState('');
@@ -34,32 +35,36 @@ const Simulate = () => {
 
 
   // Load heatmap data from the local CSV file
-  useEffect(() => {
-    d3.csv('/rdm_ffa.csv', (d) => ({
-      x: d.x,
-      y: d.y,
-      value: +d.value, // Ensure numeric values
-      cluster: +d.cluster, // Ensure numeric cluster labels
-    })).then((data) => {
-      setHeatmapData(data); // Set the data for the heatmap
-      console.log('Loaded Heatmap Data:', data);
-    }).catch((error) => {
-      console.error('Error loading heatmap data:', error);
-    });
-  }, []);
+  // useEffect(() => {
+  //   d3.csv('/rdm_ffa.csv', (d) => ({
+  //     x: d.x,
+  //     y: d.y,
+  //     value: +d.value, // Ensure numeric values
+  //     cluster: +d.cluster, // Ensure numeric cluster labels
+  //   })).then((data) => {
+  //     setHeatmapData(data); // Set the data for the heatmap
+  //     console.log('Loaded Heatmap Data:', data);
+  //   }).catch((error) => {
+  //     console.error('Error loading heatmap data:', error);
+  //   });
+  // }, []);
 
-  useEffect(() => {
-    d3.csv('/mean_sem_ffa.csv', (d) => ({
-      filename: d.filename,
-      mean: +d.mean,
-      sem: +d.sem,
-    })).then((data) => {
-      setBarChartData(data); // Set the data for the heatmap
-      console.log('Loaded BarChart Data:', data);
-    }).catch((error) => {
-      console.error('Error loading barChart data:', error);
-    });
-  }, []);
+  const { heatmapData, originalFilenames, sortedFilenames } = useHeatmapData();
+
+  const { barchartData } = useBarchartData();
+  
+  // useEffect(() => {
+  //   d3.csv('/mean_sem_ffa.csv', (d) => ({
+  //     filename: d.filename,
+  //     mean: +d.mean,
+  //     sem: +d.sem,
+  //   })).then((data) => {
+  //     setBarChartData(data); // Set the data for the heatmap
+  //     console.log('Loaded BarChart Data:', data);
+  //   }).catch((error) => {
+  //     console.error('Error loading barChart data:', error);
+  //   });
+  // }, []);
 
 
   useEffect(() => {
@@ -303,7 +308,7 @@ const Simulate = () => {
               </AccordionSummary>
               <AccordionDetails>
                 <Typography>Mean Predicted Response of virtual FFA</Typography>
-                <BarChart data={barChartData} width={400} height={300} />
+                <BarChart barChartData={barchartData} width={400} height={300} />
               </AccordionDetails>
             </Accordion>
 
@@ -332,7 +337,7 @@ const Simulate = () => {
                 <Typography>
                   Representational Dissimilarity Matrix (RDM) of virtual FFA
                 </Typography>
-                <Heatmap data={heatmapData} width={1000} height={1000} />
+                <Heatmap heatmapData={heatmapData} originalFilenames={originalFilenames} sortedFilenames={sortedFilenames} width={1000} height={1000} />
               </AccordionDetails>
             </Accordion>
 
@@ -361,7 +366,7 @@ const Simulate = () => {
                 },
               }}
               onClick={() => {
-                const data = JSON.stringify({ barChartData, heatmapData }, null, 2);
+                const data = JSON.stringify({ barchartData, heatmapData }, null, 2);
                 const blob = new Blob([data], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
 
