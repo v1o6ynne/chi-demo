@@ -70,13 +70,15 @@ const Simulate = () => {
   useEffect(() => {
     const fetchSelections = async () => {
       try {
-        const response = await fetch("http://localhost:8000/get-selections");
+        const response = await fetch("http://127.0.0.1:8000/get-selections");
         const data = await response.json();
         if (data.model) setModel(data.model);
         if (data.dataset) setDataset(data.dataset);
         if (data.region) setRegion(data.region);
         if (data.voxelOption) setVoxelOption(data.voxelOption);
         if (data.voxelNumber) setVoxelNumber(data.voxelNumber);
+
+        console.log("get-selections", data)
       } catch (error) {
         console.error("Error fetching selections:", error);
       }
@@ -112,14 +114,24 @@ const Simulate = () => {
     };
   
     try {
-      const response = await fetch("http://localhost:8000/save-selections", {
+      const response = await fetch("http://127.0.0.1:8000/save-selections", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(selections),
       });
-  
+      
+      console.log("The selections are:", selections)
+      // handle the return from save-selections here
       const result = await response.json();
-      console.log("Saved Selections and Images:", result.saved_images);
+      console.log("The return should be save with the selections above:", result)
+
+      // handle the run-model here
+      const runResponse = await fetch("http://127.0.0.1:8000/run-model", { method: "GET" });
+      const runData = await runResponse.json();
+      if (!runResponse.ok) throw new Error(runData.error || "Model execution failed.");
+
+      console.log("Model execution result:", runData);
+
     } catch (error) {
       console.error("Error saving selections:", error);
     }

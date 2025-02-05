@@ -49,5 +49,9 @@
   },
   "devDependencies": {
     "typescript": "^4.9.5"
-  }
+  },
+  "description": "(react + D3.js)",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC"
 }

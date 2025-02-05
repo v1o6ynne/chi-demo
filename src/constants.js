@@ -1,5 +1,5 @@
 export const MODEL_OPTIONS = [
-  { value: 'clip-resnet50', label: 'Clip-ResNet50' },
+  { value: 'clip_rn50', label: 'Clip-ResNet50' },
   { value: 'kosmos2', label: 'Kosmos2' },
 ];
 
