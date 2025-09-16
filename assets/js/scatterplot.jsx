@@ -314,8 +314,8 @@ const ScatterMurtyVsNsd = ({ murtyData, nsdData, roi, dataset, chartType, showOv
     overlayTooltip
       .style("visibility", "visible")
       .html(chartType === "uni"
-        ? "Unimodal mapping view"
-        : "Multimodal mapping view"
+        ? "Points > 0 indicate NSD better than M185."
+        : "Points > 0 indicate NSD better than M185."
       )
       .style("top", `${event.pageY - 30}px`)
       .style("left", `${event.pageX + 10}px`);
