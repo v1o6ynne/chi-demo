@@ -82,7 +82,7 @@ const Uploader: React.FC<UploaderProps> = ({ onFilesUploaded, onFileMappingsUpda
         </p>
         <p className="ant-upload-text">Click or drag file to this area to upload</p>
         <p className="ant-upload-hint">
-          (Demo mode: choose from preloaded images instead of local files)
+          (Demo Mode: This version lets you choose from preloaded images and runs entirely in the browser with precomputed outputs. To protect institutional GPU servers from external access, backend computation is disabled. The interface and interactions remain identical to those with a live system.)
         </p>
       </Dragger>
 
